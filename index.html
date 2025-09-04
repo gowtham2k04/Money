@@ -1,0 +1,172 @@
+<!--
+Ultra Responsive Expense Tracker
+Files included below as three separate sections: index.html, styles.css, app.js
+
+Usage:
+1. Save each section into separate files in the same folder:
+   - index.html
+   - styles.css
+   - app.js
+2. Open index.html in your browser. Works fully offline (no server required).
+
+Features (front-end prototype):
+- Mobile-first responsive layout
+- Quick expense entry (amount, category, description, date, currency)
+- Auto-categorization by keywords (editable list in JS)
+- Budget setting per day with progress indicator and alerts
+- Pie and bar charts (Chart.js CDN) for category & daily spending
+- LocalStorage persistence
+- CSV export and reset
+- Notification area and optional browser notification permission
+
+This is a single-user, front-end example. For multi-user, replace storage & auth with a backend.
+-->
+
+<!-- ===== index.html ===== -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ultra Responsive Expense Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">ExpenseTracker</div>
+      <button id="settingsBtn" class="icon-btn" title="Settings">⚙️</button>
+    </header>
+
+    <main class="container">
+      <!-- Quick input card -->
+      <section class="card input-card">
+        <form id="expenseForm" class="form-grid" autocomplete="off">
+          <div class="field">
+            <label for="amount">Amount</label>
+            <input id="amount" name="amount" inputmode="decimal" placeholder="0.00" required />
+          </div>
+
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category" name="category"></select>
+          </div>
+
+          <div class="field wide">
+            <label for="desc">Description (optional)</label>
+            <input id="desc" name="desc" placeholder="coffee, Uber, office supplies" />
+          </div>
+
+          <div class="field">
+            <label for="date">Date</label>
+            <input id="date" name="date" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="currency">Currency</label>
+            <select id="currency" name="currency">
+              <option value="INR">INR</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn primary">Add Expense <span class="plus">＋</span></button>
+            <button type="button" id="exportBtn" class="btn">Export CSV</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Dashboard cards -->
+      <section class="card dashboard">
+        <div class="card-row">
+          <div class="stat small">
+            <div class="label">Today</div>
+            <div id="todayTotal" class="value">0.00</div>
+          </div>
+
+          <div class="stat small">
+            <div class="label">Daily Budget</div>
+            <div class="value"><span id="budgetVal">0.00</span></div>
+          </div>
+
+          <div class="stat small">
+            <div class="label">Spent %</div>
+            <div id="spentPct" class="value">0%</div>
+          </div>
+        </div>
+
+        <div class="budget-bar">
+          <div id="progressBar" class="progress"></div>
+        </div>
+
+        <div id="alerts" class="alerts"></div>
+      </section>
+
+      <!-- Charts -->
+      <section class="card charts">
+        <h3>Spending Overview</h3>
+        <div class="chart-row">
+          <div class="chart-card">
+            <canvas id="pieChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Expense list -->
+      <section class="card list-card">
+        <div class="list-header">
+          <h3>Expenses</h3>
+          <div class="list-actions">
+            <button id="clearBtn" class="btn danger">Clear All</button>
+            <button id="downloadBtn" class="btn">Download JSON</button>
+          </div>
+        </div>
+        <ul id="expenseList" class="expense-list"></ul>
+      </section>
+
+    </main>
+
+    <footer class="footer">
+      <small>Built for speed — mobile-first, privacy-first. Data stored locally.</small>
+    </footer>
+
+    <!-- Simple settings modal -->
+    <div id="settingsModal" class="modal hidden">
+      <div class="modal-card">
+        <h3>Settings</h3>
+        <div class="field">
+          <label for="dailyBudget">Daily Budget</label>
+          <input id="dailyBudget" placeholder="0.00" inputmode="decimal" />
+        </div>
+        <div class="field">
+          <label for="autoCatToggle"><input id="autoCatToggle" type="checkbox" /> Enable auto-categorization</label>
+        </div>
+        <div class="field">
+          <label for="keywordMap">Custom keyword -> category (comma separated, example: coffee:Food,uber:Transport)</label>
+          <input id="keywordMap" placeholder="coffee:Food,uber:Transport" />
+        </div>
+        <div class="modal-actions">
+          <button id="saveSettings" class="btn primary">Save</button>
+          <button id="closeSettings" class="btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
+
+
+
+
+
